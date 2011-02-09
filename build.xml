@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<project name="jquery.wait" default="minify" basedir=".">
+	<!-- Include the property files -->
+	<property file="${basedir}/build/settings/project.properties"/>
+	<property file="${basedir}/build/settings/version.properties"/>
+	<property file="${basedir}/build/settings/test.properties"/>
+	
+	<!-- Include the master build file -->
+	<import file="${basedir}/build/master/master.xml"/>
+	
+	<target name="minify" depends="prepare" description="Minify the CSS and JS files">
+		<echo message="Starting: CSS and JS minification"/>
+		
+		<!-- Compress the JS files with Google Closure Compiler -->
+		<apply executable="java" parallel="false" dest="${basedir}">
+			<fileset dir="${basedir}" includes="**/*.js" excludes="**/*-min.js" />
+			<arg line="-jar"/>
+			<arg path="${master.lib}${file.separator}${master.lib.jar.compiler}" />
+			<arg line="--js"/>
+			<srcfile/>
+			<arg line="--js_output_file"/>
+			<mapper type="glob" from="*.js" to="*-min.js"/>
+			<targetfile/>
+		</apply>
+		
+		<echo message="Finished: CSS and JS minification"/>
+	</target>
+	
+	<target name="release" depends="prepare,minify,testJSLint" description="Tags a release">
+		<echo message="Starting: Release of version ${project.version}" />
+		
+		<!-- Start a release branch -->
+		<git command="flow" dir="${basedir}">
+			<args>
+				<arg value="release" />
+				<arg value="start" />
+				<arg value="${project.version}" />
+			</args>
+		</git>
+		
+		<!-- Update the release version number -->
+		<replaceregexp file="${basedir}/jquery.wait.js"
+			match="Version: [0-9\.]*"
+			replace="Version: ${project.version}"
+			byline="true"/>
+		
+		<!-- Finish a release branch -->
+		<git command="commit" dir="${basedir}">
+			<args>
+				<arg value="-a" />
+				<arg value="-m 'Updated version files for release'" />
+			</args>
+		</git>
+		
+		<!-- Finish a release branch -->
+		<git command="flow" dir="${basedir}">
+			<args>
+				<arg value="release" />
+				<arg value="finish" />
+				<arg value="-m 'Tagging version ${project.version}'" />
+				<arg value="'${project.version}'" />
+			</args>
+		</git>
+		
+		<!-- Update the build version -->
+		<propertyfile file="${build}/settings/version.properties" comment="Version properties">
+			<entry key="project.version.build" value="1" operation="+" type="int"/>
+		</propertyfile>
+		
+		<!-- Commit the updated version files -->
+		<git command="commit" dir="${basedir}">
+			<args>
+				<arg value="-a" />
+				<arg value="-m 'Updated version properties for next release'" />
+			</args>
+		</git>
+		
+		<echo message="Finished: Release of version ${project.version}"/>
+	</target>
+</project>
