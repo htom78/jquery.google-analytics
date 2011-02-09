@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="jquery.wait" default="minify" basedir=".">
+<project name="jquery.google-analytics" default="minify" basedir=".">
 	<!-- Include the property files -->
 	<property file="${basedir}/build/settings/project.properties"/>
 	<property file="${basedir}/build/settings/version.properties"/>
