@@ -18,7 +18,8 @@ var _gaq = _gaq || [];
 	$(function (){
 		settings = $.extend({}, {
 			account: 'UA-xxx-xxx',
-			callback: undefined
+			callback: undefined,
+			exclude: false
 		}, $.track.settings);
 		
 		$.track('_setAccount', settings.account);
@@ -33,6 +34,10 @@ var _gaq = _gaq || [];
 		
 		if(settings.allowLinker) {
 			$.track('_setAllowLinker', settings.allowLinker);
+		}
+		
+		if(settings.exclude) {
+			$.track('_setVar', '_exclude');
 		}
 		
 		$.track('_trackPageview');
