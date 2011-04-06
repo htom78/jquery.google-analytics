@@ -9,7 +9,7 @@
 	<import file="${basedir}/build/master/master.xml"/>
 	
 	<target name="minify" depends="prepare" description="Minify the CSS and JS files">
-		<echo message="Starting: CSS and JS minification"/>
+		<echo message="Starting: JS minification"/>
 		
 		<!-- Compress the JS files with Google Closure Compiler -->
 		<apply executable="java" parallel="false" dest="${basedir}">
@@ -23,7 +23,7 @@
 			<targetfile/>
 		</apply>
 		
-		<echo message="Finished: CSS and JS minification"/>
+		<echo message="Finished: JS minification"/>
 	</target>
 	
 	<target name="release" depends="prepare,minify,testJSLint" description="Tags a release">
@@ -76,5 +76,23 @@
 		</git>
 		
 		<echo message="Finished: Release of version ${project.version}"/>
+	</target>
+	
+	<target name="versionChanged">
+		<echo message="Starting: Version Changed" />
+		
+		<property file="${basedir}/build/settings/project.properties"/>
+		<property file="${basedir}/build/settings/version.properties"/>
+		
+		<!-- Combine the version parts into full version identifier -->
+		<property name="project.version" value="${project.version.major}.${project.version.minor}.${project.version.build}"/>
+		
+		<!-- Update the version number for future development -->
+		<replaceregexp file="${basedir}/${project.name}.js"
+			match="Version: [0-9\.]*"
+			replace="Version: ${project.version}"
+			byline="true"/>
+		
+		<echo message="Finished: Version Changed"/>
 	</target>
 </project>
