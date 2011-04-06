@@ -1,7 +1,7 @@
 /**
  * jQuery Google Analytics
  * 
- * Version: 0.1.0
+ * Version: 0.1.2
  * 
  * jQuery wrapper for working with the google analytics.
  * 
