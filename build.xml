@@ -26,7 +26,7 @@
 		<echo message="Finished: JS minification"/>
 	</target>
 	
-	<target name="release" depends="prepare,minify,testJSLint" description="Tags a release">
+	<target name="release" depends="prepare,minify" description="Tags a release">
 		<echo message="Starting: Release of version ${project.version}" />
 		
 		<!-- Start a release branch -->
