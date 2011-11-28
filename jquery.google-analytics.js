@@ -12,7 +12,15 @@
  */
 var _gaq = _gaq || [];
 
-(function($) {
+(function(factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD Registration
+		define([ 'jquery' ], factory);
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+}(function($) {
 	var settings;
 	
 	$(function (){
@@ -52,4 +60,4 @@ var _gaq = _gaq || [];
 	};
 	
 	$.track.settings = {};
-}(jQuery));
+}));
